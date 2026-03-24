@@ -141,7 +141,7 @@ jobs:
     needs: [docker, module-prepare, headers]
     runs-on: ubuntu-24.04
     container:
-      image: ghcr.io/${{ github.repository_owner }}/ubnt-build:${{ matrix.image }}
+      image: ghcr.io/paramosh/ubnt-build:${{ matrix.image }}
 
     strategy:
       matrix:
@@ -219,7 +219,7 @@ jobs:
     needs: docker
     runs-on: ubuntu-24.04
     container:
-      image: ghcr.io/${{ github.repository_owner }}/ubnt-build:${{ matrix.arch }}-tools
+      image: ghcr.io/paramosh/ubnt-build:${{ matrix.arch }}-tools
 
     strategy:
       matrix:
@@ -347,7 +347,6 @@ jobs:
       - name: Patches
         run: |
           patch -p0 <unifios/patches/amneziawg-packages.patch
-          patch -p0 <unifios/patches/openresolv-package.patch
           patch -d buildroot-2017.11.1 -p1 <unifios/patches/add-kernel-4-19.patch
           cp unifios/patches/0001-m4-glibc-change-work-around.patch buildroot-2017.11.1/package/m4/
           cp unifios/patches/0002-m4-sigstksz-fix.patch buildroot-2017.11.1/package/m4/
@@ -458,8 +457,6 @@ jobs:
         run: cd buildroot-2017.11.1 && make amneziawg-tools-rebuild # -> output/target/usr/bin/awg
       - name: Build bash
         run: cd buildroot-2017.11.1 && make bash-rebuild # -> output/target/bin/bash
-      - name: Build resolvconf
-        run: cd buildroot-2017.11.1 && make openresolv-rebuild # -> output/target/sbin/resolvconf
       - name: Build qrencode
         run: cd buildroot-2017.11.1 && make libqrencode-rebuild # -> output/target/usr/bin/qrencode
       - name: Collect tools
@@ -468,8 +465,6 @@ jobs:
           cp buildroot-2017.11.1/output/target/usr/bin/awg tools/awg
           cp buildroot-2017.11.1/output/target/bin/bash tools/
           cp buildroot-2017.11.1/output/target/usr/bin/qrencode tools/
-          cp buildroot-2017.11.1/output/target/sbin/resolvconf tools/
-          cp buildroot-2017.11.1/output/target/etc/resolvconf.conf tools/
           cp buildroot-2017.11.1/output/build/wireguard-tools-$TOOLS_VERSION/src/wg-quick/linux.bash tools/awg-quick
       - name: Store tools
         uses: actions/upload-artifact@v4

@@ -10,13 +10,6 @@ ln -sf $AMNEZIAWG/tools/qrencode /usr/bin
 if [ ! -x "$(command -v bash)" ]; then
 	ln -sf $AMNEZIAWG/tools/bash /bin
 fi
-if [ ! -x "$(command -v resolvconf)" ]; then
-	ln -sf $AMNEZIAWG/tools/resolvconf /sbin
-	if [ ! -f "/etc/resolvconf.conf" ]
-	then
-	   ln -sf $AMNEZIAWG/etc/resolvconf.conf /etc
-	fi
-fi
 
 # create symlink to amneziawg config folder
 mkdir -p $AMNEZIAWG/etc/amneziawg
