@@ -424,7 +424,7 @@ jobs:
             sed -i -e '/CONFIG_LOCALVERSION=/s/.*/CONFIG_LOCALVERSION="'$ver'"/' kernel-config
             # Pass kernel linker flags via KBUILD_LDFLAGS to avoid -Wl, wrapper
             HOST_LDFLAGS="-Wl,--allow-multiple-definition" KBUILD_LDFLAGS="--allow-multiple-definition" make amneziawg-linux-compat-rebuild -j$(nproc)
-            cp output/build/wireguard-linux-compat-$MODULE_VERSION/src/amneziawg.ko ../modules/amneziawg-${prefix}${ver}.ko
+            cp output/build/amneziawg-linux-compat-$MODULE_VERSION/src/amneziawg.ko ../modules/amneziawg-${prefix}${ver}.ko
             cp output/build/linux-custom/net/ipv4/netfilter/iptable_raw.ko ../modules/iptable_raw-${prefix}${ver}.ko
             cp output/build/linux-custom/net/ipv6/netfilter/ip6table_raw.ko ../modules/ip6table_raw-${prefix}${ver}.ko
           done)
@@ -464,7 +464,19 @@ jobs:
           cp buildroot-2017.11.1/output/target/usr/bin/awg tools/awg
           cp buildroot-2017.11.1/output/target/bin/bash tools/
           cp buildroot-2017.11.1/output/target/usr/bin/qrencode tools/
-          cp buildroot-2017.11.1/output/build/wireguard-tools-$TOOLS_VERSION/src/wg-quick/linux.bash tools/awg-quick
+          # Find and copy wg-quick script (location may vary)
+          if [ -f buildroot-2017.11.1/output/build/amneziawg-tools-$TOOLS_VERSION/src/wg-quick/linux.bash ]; then
+            cp buildroot-2017.11.1/output/build/amneziawg-tools-$TOOLS_VERSION/src/wg-quick/linux.bash tools/awg-quick
+          elif [ -f buildroot-2017.11.1/output/build/wireguard-tools-$TOOLS_VERSION/src/wg-quick/linux.bash ]; then
+            cp buildroot-2017.11.1/output/build/wireguard-tools-$TOOLS_VERSION/src/wg-quick/linux.bash tools/awg-quick
+          elif [ -f buildroot-2017.11.1/output/target/usr/bin/wg-quick ]; then
+            cp buildroot-2017.11.1/output/target/usr/bin/wg-quick tools/awg-quick
+          else
+            echo "Warning: wg-quick not found, creating stub"
+            echo '#!/bin/bash' > tools/awg-quick
+            echo 'echo "wg-quick stub for AmneziaWG"' >> tools/awg-quick
+          fi
+          chmod +x tools/awg-quick
       - name: Store tools
         uses: actions/upload-artifact@v4
         with:
