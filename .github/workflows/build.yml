@@ -423,7 +423,13 @@ jobs:
             make amneziawg-linux-compat-dirclean
             sed -i -e '/CONFIG_LOCALVERSION=/s/.*/CONFIG_LOCALVERSION="'$ver'"/' kernel-config
             # Pass kernel linker flags via KBUILD_LDFLAGS to avoid -Wl, wrapper
-            HOST_LDFLAGS="-Wl,--allow-multiple-definition" KBUILD_LDFLAGS="--allow-multiple-definition" make amneziawg-linux-compat-rebuild -j$(nproc)
+            # Use V=1 for verbose output to see compilation errors
+            HOST_LDFLAGS="-Wl,--allow-multiple-definition" KBUILD_LDFLAGS="--allow-multiple-definition" make V=1 amneziawg-linux-compat-rebuild -j$(nproc) 2>&1 | tee /tmp/build-$ver.log
+            if [ ${PIPESTATUS[0]} -ne 0 ]; then
+              echo "Build failed for version $ver. Showing last 100 lines of build log:"
+              tail -100 /tmp/build-$ver.log
+              exit 1
+            fi
             cp output/build/amneziawg-linux-compat-$MODULE_VERSION/src/amneziawg.ko ../modules/amneziawg-${prefix}${ver}.ko
             cp output/build/linux-custom/net/ipv4/netfilter/iptable_raw.ko ../modules/iptable_raw-${prefix}${ver}.ko
             cp output/build/linux-custom/net/ipv6/netfilter/ip6table_raw.ko ../modules/ip6table_raw-${prefix}${ver}.ko
