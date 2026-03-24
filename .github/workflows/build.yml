@@ -417,6 +417,8 @@ jobs:
           # Set HOST_LDFLAGS for host tools (uses -Wl, wrapper for gcc/g++)
           export HOST_LDFLAGS="-Wl,--allow-multiple-definition"
           make oldconfig
+          # Prepare kernel headers before building modules
+          make linux-custom-prepare
           (IFS=','
           for ver in $versions; do
             echo "Building version $ver"
