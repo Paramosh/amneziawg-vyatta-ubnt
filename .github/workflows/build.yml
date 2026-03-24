@@ -417,8 +417,7 @@ jobs:
           # Set HOST_LDFLAGS for host tools (uses -Wl, wrapper for gcc/g++)
           export HOST_LDFLAGS="-Wl,--allow-multiple-definition"
           make oldconfig
-          # Build kernel first to prepare headers and configuration
-          make linux-build
+          # Buildroot will prepare the kernel automatically when building modules
           (IFS=','
           for ver in $versions; do
             echo "Building version $ver"
@@ -426,7 +425,7 @@ jobs:
             sed -i -e '/CONFIG_LOCALVERSION=/s/.*/CONFIG_LOCALVERSION="'$ver'"/' kernel-config
             # Pass kernel linker flags via KBUILD_LDFLAGS to avoid -Wl, wrapper
             # Use V=1 for verbose output to see compilation errors
-            HOST_LDFLAGS="-Wl,--allow-multiple-definition" KBUILD_LDFLAGS="--allow-multiple-definition" make V=1 amneziawg-linux-compat-rebuild -j$(nproc) 2>&1 | tee /tmp/build-$ver.log
+            HOST_LDFLAGS="-Wl,--allow-multiple-definition" KBUILD_LDFLAGS="--allow-multiple-definition" make V=1 amneziawg-linux-compat-rebuild -j1 2>&1 | tee /tmp/build-$ver.log
             if [ ${PIPESTATUS[0]} -ne 0 ]; then
               echo "Build failed for version $ver. Showing last 100 lines of build log:"
               tail -100 /tmp/build-$ver.log
