@@ -418,7 +418,7 @@ jobs:
           export HOST_LDFLAGS="-Wl,--allow-multiple-definition"
           make oldconfig
           # Build kernel first to prepare headers and configuration
-          make linux-custom-build
+          make linux-build
           (IFS=','
           for ver in $versions; do
             echo "Building version $ver"
