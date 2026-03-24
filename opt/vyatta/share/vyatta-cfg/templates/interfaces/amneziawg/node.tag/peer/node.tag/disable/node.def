@@ -1,0 +1,5 @@
+priority: 910
+type: flag
+help: Disable this peer
+
+end: /opt/amneziawg/peer.sh "$COMMIT_ACTION" "$VAR(../@)" "$VAR(@)" "disable"

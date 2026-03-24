@@ -1,0 +1,5 @@
+priority: 470
+type: uint16
+help: Maximum transmission unit
+
+end: /opt/amneziawg/interface.sh "$COMMIT_ACTION" "$VAR(../@)" "mtu"

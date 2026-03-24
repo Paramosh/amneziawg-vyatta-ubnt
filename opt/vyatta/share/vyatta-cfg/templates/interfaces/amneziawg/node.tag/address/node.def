@@ -1,0 +1,6 @@
+multi:
+priority: 460
+type: ipv4net
+help: IPv4 address and prefix length
+
+end: /opt/amneziawg/interface.sh "$COMMIT_ACTION" "$VAR(../@)" "address"

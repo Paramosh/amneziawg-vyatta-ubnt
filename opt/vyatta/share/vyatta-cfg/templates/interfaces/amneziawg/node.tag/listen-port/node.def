@@ -1,0 +1,5 @@
+priority: 480
+type: uint16
+help: Listen port
+
+end: /opt/amneziawg/interface.sh "$COMMIT_ACTION" "$VAR(../@)" "listen-port"

@@ -1,0 +1,5 @@
+priority: 530
+type: uint32
+help: Junk Packet Count (jc) - Number of junk packets to send
+
+end: /opt/amneziawg/interface.sh "$COMMIT_ACTION" "$VAR(../@)" "jc"

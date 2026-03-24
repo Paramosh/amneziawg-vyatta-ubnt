@@ -1,0 +1,5 @@
+priority: 490
+type: uint32
+help: Firewall mark
+
+end: /opt/amneziawg/interface.sh "$COMMIT_ACTION" "$VAR(../@)" "fwmark"

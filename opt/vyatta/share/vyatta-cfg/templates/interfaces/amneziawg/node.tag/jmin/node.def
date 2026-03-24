@@ -1,0 +1,5 @@
+priority: 540
+type: uint32
+help: Junk Packet Minimum Size (jmin) - Minimum size of junk packets
+
+end: /opt/amneziawg/interface.sh "$COMMIT_ACTION" "$VAR(../@)" "jmin"

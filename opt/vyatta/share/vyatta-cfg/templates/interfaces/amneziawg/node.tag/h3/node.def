@@ -1,0 +1,5 @@
+priority: 600
+type: uint32
+help: Header Junk Packet Size 3 (h3) - Size of third header junk packet
+
+end: /opt/amneziawg/interface.sh "$COMMIT_ACTION" "$VAR(../@)" "h3"

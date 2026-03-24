@@ -1,0 +1,5 @@
+priority: 630
+type: uint32
+help: Init Junk Packet Size I2 - Size of second init junk packet
+
+end: /opt/amneziawg/interface.sh "$COMMIT_ACTION" "$VAR(../@)" "i2"

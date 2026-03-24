@@ -1,0 +1,5 @@
+priority: 450
+type: flag
+help: Disable this interface
+
+end: /opt/amneziawg/interface.sh "$COMMIT_ACTION" "$VAR(../@)" "disable"

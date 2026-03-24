@@ -1,0 +1,5 @@
+priority: 500
+type: flag
+help: Add routes for allowed-ips
+
+end: /opt/amneziawg/interface.sh "$COMMIT_ACTION" "$VAR(../@)" "route-allowed-ips"

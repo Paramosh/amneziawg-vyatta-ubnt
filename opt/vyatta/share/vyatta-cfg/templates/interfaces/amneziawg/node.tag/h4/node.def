@@ -1,0 +1,5 @@
+priority: 610
+type: uint32
+help: Header Junk Packet Size 4 (h4) - Size of fourth header junk packet
+
+end: /opt/amneziawg/interface.sh "$COMMIT_ACTION" "$VAR(../@)" "h4"

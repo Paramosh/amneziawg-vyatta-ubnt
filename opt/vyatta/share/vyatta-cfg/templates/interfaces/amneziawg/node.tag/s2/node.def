@@ -1,0 +1,5 @@
+priority: 570
+type: uint32
+help: Send Under Last Junk Packet Size (s2) - Size of junk packet under last
+
+end: /opt/amneziawg/interface.sh "$COMMIT_ACTION" "$VAR(../@)" "s2"
