@@ -324,13 +324,6 @@ jobs:
           sed -i 's/ --dirty//g' src/Makefile
           patch -p1 < ../siphash_no_fallthrough.patch
           python3 ../fix_netlink_api.py
-          # Fix skb_put_data redefinition for kernel 4.13+
-          cd src/compat
-          sed -i '683a #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 13, 0)' compat.h
-          sed -i '684a // skb_put_data is already available in kernel 4.13+' compat.h
-          sed -i '685a #else' compat.h
-          sed -i '694a #endif' compat.h
-          cd ../..
           cd ..
           tar -cf amneziawg-linux-kernel-module-$MODULE_VERSION.tar amneziawg-linux-kernel-module-$MODULE_VERSION/
       - name: Copy packages
