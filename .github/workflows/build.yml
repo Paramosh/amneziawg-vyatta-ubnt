@@ -290,8 +290,11 @@ jobs:
           mkdir -p pkg/usr/bin pkg/lib/modules/$KERNEL/kernel/net
           cp -r debian pkg/DEBIAN
           cp -r opt pkg/opt
-          # Remove conflicting file that exists in wireguard-vyatta-ubnt package
+          # Remove conflicting files that exist in wireguard-vyatta-ubnt package
           rm -f pkg/opt/vyatta/sbin/vyatta-check-allowed-ips.pl
+          # Remove wireguard templates directory - we use amneziawg instead
+          rm -rf pkg/opt/vyatta/share/vyatta-cfg/templates/interfaces/wireguard
+          rm -rf pkg/opt/vyatta/share/vyatta-op/templates/show/interfaces/wireguard
           cp amneziawg.ko pkg/lib/modules/$KERNEL/kernel/net/amneziawg.ko
           cp awg pkg/usr/bin/awg
           chmod +x pkg/usr/bin/awg
