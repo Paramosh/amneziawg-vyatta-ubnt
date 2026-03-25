@@ -324,8 +324,8 @@ jobs:
           sed -i 's/ --dirty//g' src/Makefile
           patch -p1 < ../siphash_no_fallthrough.patch
           python3 ../fix_netlink_api.py
-          # Remove skb_put_data - all Ubiquiti kernels have it via backports
-          sed -i '/^static inline void \*skb_put_data/,/^}$/c /* skb_put_data removed - available in kernel */' src/compat/compat.h
+          # Fix for old kernels (4.1.37) - replace skb_put_data with memcpy+skb_put
+          sed -i 's/skb_put_data(skb, buffer, len);/memcpy(skb_put(skb, len), buffer, len);/' src/socket.c
           cd ..
           tar -cf amneziawg-linux-kernel-module-$MODULE_VERSION.tar amneziawg-linux-kernel-module-$MODULE_VERSION/
       - name: Copy packages
@@ -422,11 +422,6 @@ jobs:
           # Set HOST_LDFLAGS for host tools (uses -Wl, wrapper for gcc/g++)
           export HOST_LDFLAGS="-Wl,--allow-multiple-definition"
           make oldconfig
-          # Fix for udm-1.9.0-10 (kernel 4.1.37) - replace skb_put_data with memcpy+skb_put
-          if [[ "${{ matrix.base }}" == "udm-1.9.0-10" ]]; then
-            echo "Applying skb_put_data compatibility patch for udm-1.9.0-10..."
-            sed -i 's/skb_put_data(skb, buffer, len);/memcpy(skb_put(skb, len), buffer, len);/' src/socket.c
-          fi
           # Build each kernel version sequentially within this job
           (IFS=','
           for ver in $versions; do
