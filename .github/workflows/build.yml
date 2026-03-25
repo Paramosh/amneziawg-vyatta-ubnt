@@ -519,7 +519,10 @@ jobs:
         run: cp unifios/setup_amneziawg.sh package/amneziawg/
       - name: Fix permissions
         run: |
-          mv package/amneziawg/tools/resolvconf.conf package/amneziawg/etc
+          # resolvconf.conf was removed, skip if not present
+          if [ -f package/amneziawg/tools/resolvconf.conf ]; then
+            mv package/amneziawg/tools/resolvconf.conf package/amneziawg/etc
+          fi
           chmod +x package/amneziawg/tools/* package/amneziawg/setup_amneziawg.sh
           sudo chown -R root:root package/amneziawg
       - name: Package
