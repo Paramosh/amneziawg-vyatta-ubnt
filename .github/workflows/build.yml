@@ -315,7 +315,7 @@ jobs:
         run: |
           curl -o buildroot.tar.bz2 https://buildroot.org/downloads/buildroot-2017.11.1.tar.bz2
           tar -xf buildroot.tar.bz2
-      - name: Download AmnesiaWG module source
+      - name: Download AmnesiaWG module source and apply patches
         run: |
           curl -L -o amneziawg-linux-kernel-module-$MODULE_VERSION.tar.gz https://github.com/amnezia-vpn/amneziawg-linux-kernel-module/archive/refs/tags/v$MODULE_VERSION.tar.gz
           tar -xf amneziawg-linux-kernel-module-$MODULE_VERSION.tar.gz
@@ -324,18 +324,14 @@ jobs:
           sed -i 's/ --dirty//g' src/Makefile
           patch -p1 < ../siphash_no_fallthrough.patch
           python3 ../fix_netlink_api.py
-          cd ..
-          tar -cf amneziawg-linux-kernel-module-$MODULE_VERSION.tar amneziawg-linux-kernel-module-$MODULE_VERSION/
-      - name: Apply UDM kernel patches
-        run: |
-          tar -xf amneziawg-linux-kernel-module-$MODULE_VERSION.tar
-          cd amneziawg-linux-kernel-module-$MODULE_VERSION/src/compat
           # Fix skb_put_data redefinition for kernel 4.13+
+          cd src/compat
           sed -i '683a #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 13, 0)' compat.h
           sed -i '684a // skb_put_data is already available in kernel 4.13+' compat.h
           sed -i '685a #else' compat.h
           sed -i '694a #endif' compat.h
           cd ../..
+          cd ..
           tar -cf amneziawg-linux-kernel-module-$MODULE_VERSION.tar amneziawg-linux-kernel-module-$MODULE_VERSION/
       - name: Copy packages
         run: cp -pr unifios/packages/amneziawg-linux-compat buildroot-2017.11.1/package/amneziawg-linux-compat
