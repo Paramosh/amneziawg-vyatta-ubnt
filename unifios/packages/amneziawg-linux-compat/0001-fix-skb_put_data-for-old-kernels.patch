@@ -1,11 +1,15 @@
 --- a/src/compat/compat.h
 +++ b/src/compat/compat.h
-@@ -680,8 +680,11 @@ static inline void *skb_put_zero(struct sk_buff *skb, unsigned int len)
+@@ -680,8 +680,14 @@ static inline void *skb_put_zero(struct sk_buff *skb, unsigned int len)
  	return ret;
  }
  
-+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 13, 0)
-+/* skb_put_data is only available in kernel 4.13+ */
++/*
++ * skb_put_data was added in kernel 4.13.
++ * Some distros backport it to 4.4.x (like Ubiquiti 4.4.198).
++ * We only define it for kernels < 4.4.0 to avoid conflicts.
++ */
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 4, 0)
  static inline void *skb_put_data(struct sk_buff *skb, const void *data, unsigned int len)
  {
  	void *ret = skb_put(skb, len);
