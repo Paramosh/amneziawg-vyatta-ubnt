@@ -290,10 +290,10 @@ jobs:
           mkdir -p pkg/usr/bin pkg/lib/modules/$KERNEL/kernel/net
           cp -r debian pkg/DEBIAN
           cp -r opt pkg/opt
-          # Remove conflicting files that exist in wireguard-vyatta-ubnt package
-          rm -f pkg/opt/vyatta/sbin/vyatta-check-allowed-ips.pl
           # Remove ALL wireguard templates directories - we use amneziawg instead
           find pkg/opt/vyatta/share -type d -name "wireguard" -exec rm -rf {} + 2>/dev/null || true
+          # Update vyatta-check-allowed-ips.pl to support both wg and awg interfaces
+          sed -i 's/if ($intf =~ \/^(wg\\d{0,3})$\/) {/if ($intf =~ \/^(wg|awg)\\d{0,3}$\/) {/' pkg/opt/vyatta/sbin/vyatta-check-allowed-ips.pl
           cp amneziawg.ko pkg/lib/modules/$KERNEL/kernel/net/amneziawg.ko
           cp awg pkg/usr/bin/awg
           chmod +x pkg/usr/bin/awg
