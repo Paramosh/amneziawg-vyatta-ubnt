@@ -7,4 +7,6 @@ if [ "$1" = "remove" -o "$1" = "abort-install" -o "$1" = "disappear" ] \
               /opt/vyatta/share/vyatta-cfg/templates/firewall/options/mss-clamp/interface-type/node.def
   dpkg-divert --package amneziawg  --rename --remove \
               /opt/vyatta/share/vyatta-cfg/templates/firewall/options/mss-clamp6/interface-type/node.def
+  dpkg-divert --package amneziawg  --rename --remove \
+              /opt/vyatta/sbin/vyatta-check-allowed-ips.pl
 fi
