@@ -290,6 +290,8 @@ jobs:
           mkdir -p pkg/usr/bin pkg/lib/modules/$KERNEL/kernel/net
           cp -r debian pkg/DEBIAN
           cp -r opt pkg/opt
+          # Remove conflicting file that exists in wireguard-vyatta-ubnt package
+          rm -f pkg/opt/vyatta/sbin/vyatta-check-allowed-ips.pl
           cp amneziawg.ko pkg/lib/modules/$KERNEL/kernel/net/amneziawg.ko
           cp awg pkg/usr/bin/awg
           chmod +x pkg/usr/bin/awg
