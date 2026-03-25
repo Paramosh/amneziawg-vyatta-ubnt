@@ -324,7 +324,10 @@ jobs:
           sed -i 's/ --dirty//g' src/Makefile
           patch -p1 < ../siphash_no_fallthrough.patch
           python3 ../fix_netlink_api.py
-          # Fix for old kernels (4.1.37) - replace skb_put_data with memcpy+skb_put
+          # Wrap skb_put_data with version check - only for kernels < 4.4.0
+          # Newer kernels (including 4.4.x with backports) already have this function
+          awk '/^static inline void \*skb_put_data/{print "#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 4, 0)"} {print} /^static inline void \*skb_put_data/,/^}$/{if(/^}$/)print "#endif"}' src/compat/compat.h > src/compat/compat.h.tmp && mv src/compat/compat.h.tmp src/compat/compat.h
+          # Fix for old kernels (4.1.37) - replace skb_put_data usage with memcpy+skb_put
           sed -i 's/skb_put_data(skb, buffer, len);/memcpy(skb_put(skb, len), buffer, len);/' src/socket.c
           cd ..
           tar -cf amneziawg-linux-kernel-module-$MODULE_VERSION.tar amneziawg-linux-kernel-module-$MODULE_VERSION/
