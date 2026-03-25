@@ -389,7 +389,6 @@ jobs:
     needs: [udm-prepare-buildroot]
     runs-on: ubuntu-24.04
     strategy:
-      fail-fast: false
       matrix:
         base: [udm-1.9.0-10, udm-1.10.0-8, udm-1.10.0-12, udm-se-2.2.4, udr-2.2.12]
     steps:
@@ -422,18 +421,18 @@ jobs:
           # Set HOST_LDFLAGS for host tools (uses -Wl, wrapper for gcc/g++)
           export HOST_LDFLAGS="-Wl,--allow-multiple-definition"
           make oldconfig
-          # Build each kernel version sequentially within this job
+          # Buildroot will prepare the kernel automatically when building modules
           (IFS=','
           for ver in $versions; do
-            echo "Building version $ver for ${{ matrix.base }}"
+            echo "Building version $ver"
             make amneziawg-linux-compat-dirclean
             sed -i -e '/CONFIG_LOCALVERSION=/s/.*/CONFIG_LOCALVERSION="'$ver'"/' kernel-config
             # Pass kernel linker flags via KBUILD_LDFLAGS to avoid -Wl, wrapper
             # Use V=1 for verbose output to see compilation errors
-            HOST_LDFLAGS="-Wl,--allow-multiple-definition" KBUILD_LDFLAGS="--allow-multiple-definition" make V=1 amneziawg-linux-compat-rebuild -j$(nproc) 2>&1 | tee /tmp/build-${{ matrix.base }}-$ver.log
+            HOST_LDFLAGS="-Wl,--allow-multiple-definition" KBUILD_LDFLAGS="--allow-multiple-definition" make V=1 amneziawg-linux-compat-rebuild -j1 2>&1 | tee /tmp/build-$ver.log
             if [ ${PIPESTATUS[0]} -ne 0 ]; then
-              echo "Build failed for version $ver (${{ matrix.base }}). Showing last 100 lines of build log:"
-              tail -100 /tmp/build-${{ matrix.base }}-$ver.log
+              echo "Build failed for version $ver. Showing last 100 lines of build log:"
+              tail -100 /tmp/build-$ver.log
               exit 1
             fi
             cp output/build/amneziawg-linux-compat-$MODULE_VERSION/src/amneziawg.ko ../modules/amneziawg-${prefix}${ver}.ko
