@@ -324,16 +324,45 @@ jobs:
           python3 ../fix_netlink_api.py
           cd ..
           tar -cf amneziawg-linux-kernel-module-$MODULE_VERSION.tar amneziawg-linux-kernel-module-$MODULE_VERSION/
-      - name: Download AmnesiaWG tools source
+      - name: Apply UDM kernel patches
         run: |
-          curl -L -o amneziawg-tools-$TOOLS_VERSION.tar.gz https://github.com/amnezia-vpn/amneziawg-tools/archive/refs/tags/v$TOOLS_VERSION.tar.gz
-          tar -xf amneziawg-tools-$TOOLS_VERSION.tar.gz
-          tar -cf amneziawg-tools-$TOOLS_VERSION.tar amneziawg-tools-$TOOLS_VERSION/
+          tar -xf amneziawg-linux-kernel-module-$MODULE_VERSION.tar
+          cd amneziawg-linux-kernel-module-$MODULE_VERSION/src/compat
+          # Fix skb_put_data redefinition for kernel 4.13+
+          cat > compat_fix.patch << 'EOF'
+--- a/compat.h
++++ b/compat.h
+@@ -680,6 +680,10 @@ static inline void *skb_put_zero(struct sk_buff *skb, unsigned int len)
+ 	return ret;
+ }
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 13, 0)
++// skb_put_data is already available in kernel 4.13+
++#else
+ static inline void *skb_put_data(struct sk_buff *skb, const void *data, unsigned int len)
+ {
+ 	void *ret = skb_put(skb, len);
+@@ -687,6 +691,7 @@ static inline void *skb_put_data(struct sk_buff *skb, const void *data, unsigned
+ 	return ret;
+ }
++#endif
+ 
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 10, 0)
+ // timer_setup is already available in kernel 4.10+
+EOF
+          patch -p1 < compat_fix.patch
+          cd ../..
+          tar -cf amneziawg-linux-kernel-module-$MODULE_VERSION.tar amneziawg-linux-kernel-module-$MODULE_VERSION/
       - name: Copy packages
         run: cp -pr unifios/packages/amneziawg-linux-compat buildroot-2017.11.1/package/amneziawg-linux-compat
       - name: Copy AmneziaWG source
         run: |
           cp amneziawg-linux-kernel-module-$MODULE_VERSION.tar buildroot-2017.11.1/package/amneziawg-linux-compat/amneziawg-linux-compat-$MODULE_VERSION.tar
+      - name: Download AmnesiaWG tools source
+        run: |
+          curl -L -o amneziawg-tools-$TOOLS_VERSION.tar.gz https://github.com/amnezia-vpn/amneziawg-tools/archive/refs/tags/v$TOOLS_VERSION.tar.gz
+          tar -xf amneziawg-tools-$TOOLS_VERSION.tar.gz
+          tar -cf amneziawg-tools-$TOOLS_VERSION.tar amneziawg-tools-$TOOLS_VERSION/
       - name: Copy amneziawg-tools packages
         run: cp -pr unifios/packages/amneziawg-tools buildroot-2017.11.1/package/amneziawg-tools
       - name: Copy AmneziaWG tools source
