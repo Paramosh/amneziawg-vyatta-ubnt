@@ -290,10 +290,11 @@ jobs:
           mkdir -p pkg/usr/bin pkg/lib/modules/$KERNEL/kernel/net
           cp -r debian pkg/DEBIAN
           cp -r opt pkg/opt
-          # Remove wireguard templates - they come from wireguard-vyatta-ubnt package
-          # We only install amneziawg templates to avoid file conflicts
+          # Remove ALL wireguard templates - they come from wireguard-vyatta-ubnt package
+          # We only need amneziawg templates and vyatta-check-allowed-ips.pl
           rm -rf pkg/opt/vyatta/share/vyatta-cfg/templates/interfaces/wireguard
           rm -rf pkg/opt/vyatta/share/vyatta-op/templates/show/interfaces/wireguard
+          rm -rf pkg/opt/vyatta/share/vyatta-op/templates/clear/interfaces/wireguard
           cp amneziawg.ko pkg/lib/modules/$KERNEL/kernel/net/amneziawg.ko
           cp awg pkg/usr/bin/awg
           chmod +x pkg/usr/bin/awg
