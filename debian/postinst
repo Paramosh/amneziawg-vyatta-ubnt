@@ -1,2 +1,8 @@
 #!/bin/sh
 depmod -a
+
+# Install updated vyatta-check-allowed-ips.pl with support for both wg and awg
+if [ -f /opt/vyatta/sbin/vyatta-check-allowed-ips.pl.orig ]; then
+    cp /opt/vyatta/share/amneziawg/vyatta-check-allowed-ips.pl /opt/vyatta/sbin/vyatta-check-allowed-ips.pl
+    chmod +x /opt/vyatta/sbin/vyatta-check-allowed-ips.pl
+fi
