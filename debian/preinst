@@ -27,16 +27,9 @@ if [ "$1" = "install" ] || dpkg --compare-versions "$(dpkg-query --showformat='$
               --add /opt/vyatta/share/vyatta-cfg/templates/firewall/options/mss-clamp6/interface-type/node.def
 fi
 
-# Handle vyatta-check-allowed-ips.pl to support both wg and awg interfaces
-# Don't divert if wireguard-vyatta-ubnt already manages it
+# Add diversion for vyatta-check-allowed-ips.pl to support both wg and awg
 if [ "$1" = "install" ]; then
-    if [ -f /opt/vyatta/sbin/vyatta-check-allowed-ips.pl ]; then
-        # File exists - check if it's already diverted by wireguard-vyatta-ubnt
-        if ! dpkg-divert --list | grep -q "vyatta-check-allowed-ips.pl"; then
-            # Not diverted yet - add diversion and install our version
-            dpkg-divert --package amneziawg --rename \
-                        --divert /opt/vyatta/sbin/vyatta-check-allowed-ips.pl.orig \
-                        --add /opt/vyatta/sbin/vyatta-check-allowed-ips.pl || true
-        fi
-    fi
+  dpkg-divert --package amneziawg --rename \
+              --divert /opt/vyatta/sbin/vyatta-check-allowed-ips.pl.orig \
+              --add /opt/vyatta/sbin/vyatta-check-allowed-ips.pl || true
 fi

@@ -7,7 +7,7 @@ if [ "$1" = "remove" -o "$1" = "abort-install" -o "$1" = "disappear" ] \
               /opt/vyatta/share/vyatta-cfg/templates/firewall/options/mss-clamp/interface-type/node.def
   dpkg-divert --package amneziawg  --rename --remove \
               /opt/vyatta/share/vyatta-cfg/templates/firewall/options/mss-clamp6/interface-type/node.def
-  # Restore original vyatta-check-allowed-ips.pl if it exists
+  # Restore original vyatta-check-allowed-ips.pl
   if [ -f /opt/vyatta/sbin/vyatta-check-allowed-ips.pl.orig ]; then
       mv /opt/vyatta/sbin/vyatta-check-allowed-ips.pl.orig /opt/vyatta/sbin/vyatta-check-allowed-ips.pl
   fi
