@@ -297,6 +297,7 @@ jobs:
           cp amneziawg.ko pkg/lib/modules/$KERNEL/kernel/net/amneziawg.ko
           cp awg pkg/usr/bin/awg
           chmod +x pkg/usr/bin/awg
+          chmod +x pkg/opt/amneziawg/*.sh
           sed -i "s/PACKAGE_VERSION/$MODULE_VERSION/g" pkg/DEBIAN/control
           sed -i "s/PACKAGE_RELEASE/$PACKAGE_RELEASE/g" pkg/DEBIAN/control
           sed -i "s/KERNEL_VER/$KERNEL/g" pkg/DEBIAN/preinst
