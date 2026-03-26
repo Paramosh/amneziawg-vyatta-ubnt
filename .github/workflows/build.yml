@@ -295,7 +295,8 @@ jobs:
           rm -rf pkg/opt/vyatta/share/vyatta-cfg/templates/interfaces/wireguard
           rm -rf pkg/opt/vyatta/share/vyatta-op/templates/show/interfaces/wireguard
           # Install vyatta-check-allowed-ips.pl with support for both wg and awg
-          cp pkg/opt/vyatta/share/amneziawg/vyatta-check-allowed-ips.pl pkg/opt/vyatta/sbin/vyatta-check-allowed-ips.pl
+          mkdir -p pkg/opt/vyatta/sbin
+          cp -f pkg/opt/vyatta/share/amneziawg/vyatta-check-allowed-ips.pl pkg/opt/vyatta/sbin/vyatta-check-allowed-ips.pl
           chmod +x pkg/opt/vyatta/sbin/vyatta-check-allowed-ips.pl
           cp amneziawg.ko pkg/lib/modules/$KERNEL/kernel/net/amneziawg.ko
           cp awg pkg/usr/bin/awg
